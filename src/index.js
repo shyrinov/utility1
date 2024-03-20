@@ -1,51 +1,47 @@
-// task-runner.js
+// data-validator.js
 
-class TaskRunner {
-    constructor() {
-      this.tasks = {};
-    }
-  
-    // Define a new task
-    addTask(name, dependencies, taskFn) {
-      if (!this.tasks[name]) {
-        this.tasks[name] = {
-          dependencies: dependencies || [],
-          taskFn: taskFn
-        };
-      } else {
-        throw new Error(`Task "${name}" already exists.`);
-      }
-    }
-  
-    // Run a task and its dependencies recursively
-    runTask(name, visited = new Set()) {
-      if (!this.tasks[name]) {
-        throw new Error(`Task "${name}" not found.`);
-      }
-  
-      if (visited.has(name)) {
-        throw new Error(`Circular dependency detected: ${Array.from(visited).join(' -> ')} -> ${name}`);
-      }
-  
-      visited.add(name);
-  
-      for (const dependency of this.tasks[name].dependencies) {
-        this.runTask(dependency, visited);
-      }
-  
-      this.tasks[name].taskFn();
-    }
-  
-    // Run all tasks
-    runAll() {
-      for (const taskName in this.tasks) {
-        if (this.tasks.hasOwnProperty(taskName)) {
-          this.runTask(taskName);
-        }
-      }
-    }
+class DataValidator {
+  constructor(data) {
+    this.data = data;
+    this.errors = {};
   }
-  
-  // Export the TaskRunner class
-  module.exports = TaskRunner;
-  
+
+  required(fieldName, errorMessage = `${fieldName} is required`) {
+    if (!this.data[fieldName]) {
+      this.errors[fieldName] = errorMessage;
+    }
+    return this;
+  }
+
+  minLength(fieldName, minLength, errorMessage = `${fieldName} must be at least ${minLength} characters long`) {
+    if (this.data[fieldName] && this.data[fieldName].length < minLength) {
+      this.errors[fieldName] = errorMessage;
+    }
+    return this;
+  }
+
+  isEmail(fieldName, errorMessage = `${fieldName} must be a valid email address`) {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (this.data[fieldName] && !emailRegex.test(this.data[fieldName])) {
+      this.errors[fieldName] = errorMessage;
+    }
+    return this;
+  }
+
+  isNumeric(fieldName, errorMessage = `${fieldName} must be a numeric value`) {
+    if (this.data[fieldName] && isNaN(this.data[fieldName])) {
+      this.errors[fieldName] = errorMessage;
+    }
+    return this;
+  }
+
+  isValid() {
+    return Object.keys(this.errors).length === 0;
+  }
+
+  getErrors() {
+    return this.errors;
+  }
+}
+
+module.exports = DataValidator;
