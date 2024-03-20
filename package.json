@@ -1,6 +1,6 @@
 {
-  "name": "utility1", 
-  "version": "1.0.0", 
+  "name": "vertyhan",
+  "version": "1.0.1",
   "description": "by Veselka",
   "main": "./src/index.js",
   "scripts": {
@@ -8,13 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/shyrinov/utility1.git" 
+    "url": "https://github.com/shyrinov/utility1.git"
   },
-  "keywords": [ 
-    "", 
+  "keywords": [
+    "",
     "",
     ""
   ],
-  "author": "", 
-  "license": "MIT"
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bazuka1": "^1.0.1"
+  }
 }
